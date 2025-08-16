@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Matrix Operations Tool</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>Matrix Operations Tool</h1>
+
+    <div class="matrix-section">
+        <h3>Matrix 1</h3>
+        <table id="matrix1" class="matrix-table"></table>
+        <button onclick="addRow('matrix1')">Add Row</button>
+        <button onclick="removeRow('matrix1')">Remove Row</button>
+        <button onclick="addCol('matrix1')">Add Column</button>
+        <button onclick="removeCol('matrix1')">Remove Column</button>
+    </div>
+
+    <div class="matrix-section">
+        <h3>Matrix 2 (optional)</h3>
+        <table id="matrix2" class="matrix-table"></table>
+        <button onclick="addRow('matrix2')">Add Row</button>
+        <button onclick="removeRow('matrix2')">Remove Row</button>
+        <button onclick="addCol('matrix2')">Add Column</button>
+        <button onclick="removeCol('matrix2')">Remove Column</button>
+    </div>
+
+    <div>
+        <label>Operation:</label>
+        <select id="operation">
+            <option value="add">Addition</option>
+            <option value="subtract">Subtraction</option>
+            <option value="multiply">Multiplication</option>
+            <option value="transpose1">Transpose Matrix 1</option>
+            <option value="transpose2">Transpose Matrix 2</option>
+            <option value="determinant1">Determinant Matrix 1</option>
+            <option value="determinant2">Determinant Matrix 2</option>
+        </select>
+        <button onclick="calculate()">Calculate</button>
+    </div>
+
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+function addRow(id) {
+    const table = document.getElementById(id);
+    const row = table.insertRow();
+    const colCount = table.rows[0] ? table.rows[0].cells.length : 1;
+    for (let i = 0; i < colCount; i++) {
+        const cell = row.insertCell();
+        const input = document.createElement('input');
+        input.type = 'number';
+        cell.appendChild(input);
+    }
+}
+
+function removeRow(id) {
+    const table = document.getElementById(id);
+    if (table.rows.length > 1) {
+        table.deleteRow(-1);
+    } else {
+        alert("Cannot remove the last row.");
+    }
+}
+
+function addCol(id) {
+    const table = document.getElementById(id);
+    const rows = table.rows.length || 1;
+    for (let i = 0; i < rows; i++) {
+        const row = table.rows[i] || table.insertRow();
+        const cell = row.insertCell();
+        const input = document.createElement('input');
+        input.type = 'number';
+        cell.appendChild(input);
+    }
+}
+
+function removeCol(id) {
+    const table = document.getElementById(id);
+    if (table.rows.length > 0 && table.rows[0].cells.length > 1) {
+        for (let i = 0; i < table.rows.length; i++) {
+            table.rows[i].deleteCell(-1);
+        }
+    } else {
+        alert("Cannot remove the last column.");
+    }
+}
+
+function getMatrix(id) {
+    const table = document.getElementById(id);
+    if (table.rows.length === 0) return [];
+    let data = [];
+    for (let r = 0; r < table.rows.length; r++) {
+        let row = [];
+        for (let c = 0; c < table.rows[r].cells.length; c++) {
+            const val = parseFloat(table.rows[r].cells[c].children[0].value);
+            row.push(isNaN(val) ? 0 : val);
+        }
+        data.push(row);
+    }
+    return data;
+}
+
+function displayResult(data) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = '';
+
+    if (data.error) {
+        resultDiv.innerHTML = `<span style="color:red">${data.error}</span>`;
+        return;
+    }
+
+    const result = data.result;
+
+    function formatNumber(num) {
+        if (Number.isInteger(num)) {
+            return num.toString();
+        }
+        return num.toFixed(2);
+    }
+
+    if (Array.isArray(result) && result.length > 0 && Array.isArray(result[0])) {
+        const table = document.createElement('table');
+        table.className = 'result-matrix';
+        result.forEach(rowArray => {
+            const row = table.insertRow();
+            rowArray.forEach(cellValue => {
+                const cell = row.insertCell();
+                cell.textContent = formatNumber(cellValue);
+            });
+        });
+        resultDiv.appendChild(table);
+    } else {
+        resultDiv.innerHTML = `<div>Result: ${formatNumber(result)}</div>`;
+    }
+}
+
+function calculate() {
+    const matrix1 = getMatrix('matrix1');
+    const matrix2 = getMatrix('matrix2');
+    const operation = document.getElementById('operation').value;
+
+    fetch('/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ matrix1, matrix2, operation })
+    })
+    .then(res => res.json())
+    .then(data => {
+        displayResult(data);
+    })
+    .catch(error => {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `<span style="color:red">Error: Could not connect to the server.</span>`;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    addRow('matrix1'); addCol('matrix1');
+    addRow('matrix1'); addCol('matrix1');
+    addRow('matrix2'); addCol('matrix2');
+    addRow('matrix2'); addCol('matrix2');
+});
+</script>
+</body>
+</html>

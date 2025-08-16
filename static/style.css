@@ -1,0 +1,154 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    perspective: 1000px; 
+
+    background: linear-gradient(135deg, #d7eeee, #f4ceb8, #ccf5ec, #e7f4bf,#cbf8c8,#fbdefc);
+    background-size: 400% 400%;
+    animation: colorShift 12s ease infinite;
+    transition: transform 0.2s ease;
+}
+@keyframes colorShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body:hover {
+    transform: rotateX(5deg) rotateY(5deg);
+}
+
+.container {
+    background-color: rgb(249, 231, 231);
+    padding: 30px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    width: 90%;
+    max-width: 900px;
+    
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.1), 
+        0 1px 3px rgba(0, 0, 0, 0.08),
+        inset 0 1px 3px rgba(255, 255, 255, 0.5),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.1); 
+    
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.2),
+        0 3px 6px rgba(0, 0, 0, 0.16),
+        inset 0 1px 3px rgba(255, 255, 255, 0.6),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+    text-align: center;
+    color: #01579b; 
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    font-weight: 600;
+}
+
+h3 {
+    color: #555;
+    margin-top: 0;
+    font-size: 1.2em;
+}
+.matrix-section {
+    margin-bottom: 25px;
+    border: 1px solid #888585;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.matrix-table {
+    border-collapse: separate;
+    border-spacing: 5px;
+    margin: 15px 0;
+    width: auto;
+}
+
+.matrix-table input {
+    width: 70px;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #8c8989;
+    border-radius: 5px;
+    font-size: 1em;
+    -moz-appearance: textfield;
+}
+
+.matrix-table input::-webkit-outer-spin-button,
+.matrix-table input::-webkit-inner-spin-button {
+    -webkit-appearance: none; 
+    margin: 0;
+}
+
+button {
+    padding: 10px 15px;
+    margin-right: 8px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    background-color: #84a1f9;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #411fba;
+}
+div:has(> select) {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+select {
+    padding: 10px;
+    border: 1px solid #d5b5b5;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    border: 1px solid #928f8f;
+    border-radius: 8px;
+    background-color: #f1f1f1;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.result-matrix {
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.result-matrix td {
+    border: 1px solid #999;
+    padding: 12px;
+    text-align: center;
+    font-size: 1.1em;
+    background-color: white;
+    border-radius: 4px;
+}
+.error {
+    color: #d9534f;
+    font-weight: bold;
+    font-size: 1.1em;
+}
